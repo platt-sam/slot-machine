@@ -1,2 +1,2 @@
 # casino
-An expanded version of the slot machine simulator that adds a Slot Machine GUI.
+This version of slot-machine-gui includes a casino in which users can create and use slot-machine objects.
