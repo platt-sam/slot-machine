@@ -24,6 +24,8 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 	private final int THREE_OF_A_KIND_REWARD = 5; // The base reward for having "three of a kind".
 	private final int TWO_OF_A_KIND_REWARD = 3; // The base reward for having "two of a kind".
 	
+	Casino theCasino;
+	
 	private int currentBet;
 	private int win;
 	private int totalWinnings;
@@ -31,6 +33,8 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 	private int n0;
 	private int n1;
 	private int n2;
+	
+	private JLabel casinoLabel;
 	
 	private JLabel n0Label;
 	private JLabel n1Label;
@@ -48,12 +52,21 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 	private JButton pullHandleButton;
 	private JButton resetButton;
 	
-	public SlotMachineGUI () {
+	public SlotMachineGUI(Casino cas) {
+		
+		theCasino = cas;
 		
 		// create the labels to display the values
-	      
-		JPanel textPanel = new JPanel();
+		
+		
+	    JPanel textPanel = new JPanel();
 	    textPanel.setBackground(Color.blue);
+	    
+	    casinoLabel = new JLabel();
+	    casinoLabel.setOpaque(true);
+	    casinoLabel.setBackground(Color.red);
+	    casinoLabel.setForeground(Color.white);
+	    textPanel.add(casinoLabel);
 	    
 	    n0Label = new JLabel(); // Will contain the first of three reel values
 	    n0Label.setOpaque(true);
@@ -155,9 +168,11 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 	}
 	
 	/* 
-	 * Display the values of the three reel numbers.
+	 * Display the name of the casino and the values of the three reel numbers.
 	 */
 	private void displayNums() {
+		casinoLabel.setText("" + theCasino.casinoName);
+		
 		n0Label.setText("" + n0);
 		n1Label.setText("" + n1);
 		n2Label.setText("" + n2);
@@ -244,15 +259,33 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 		if((n0 == 0) && (n1 == 0) && (n2 == 0)) { // Triple zeros means TRIPLE_ZERO_REWARD * currentBet.
 			win = TRIPLE_ZERO_REWARD * currentBet;
 			
+			/*
+			 * Update your pullHandle method in the Slot Machine class to invoke the updateStats method on its Casino 
+			 * whenever that slot machine has non-zero winnings.
+			 */
+			theCasino.updateStats(win);
+			
 		} else if((n0 == n1) && (n0 == n2)) { // Three of a kind that is not zero means THREE_OF_A_KIND_REWARD * currentBet;
 			win = THREE_OF_A_KIND_REWARD * currentBet;
+			
+			/*
+			 * Update your pullHandle method in the Slot Machine class to invoke the updateStats method on its Casino 
+			 * whenever that slot machine has non-zero winnings.
+			 */
+			theCasino.updateStats(win);
 			
 		} else if((n0 == n1) || (n0 == n2) || (n1 == n2)) { // Two of a kind means TWO_OF_A_KIND_REWARD * currentBet;
 			win = TWO_OF_A_KIND_REWARD * currentBet;
 			
+			/*
+			 * Update your pullHandle method in the Slot Machine class to invoke the updateStats method on its Casino 
+			 * whenever that slot machine has non-zero winnings.
+			 */
+			theCasino.updateStats(win);
+			
 		}
 		
-		// Add any new winnings to totalWinnings
+		// Add any new winnings to the totalWinnings variable.
 		totalWinnings += win;
 		
 		/*
@@ -266,6 +299,7 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 		
 		displayNums();
 		displayStats();
+		
 	}
 	
 	/*
@@ -287,7 +321,7 @@ public class SlotMachineGUI extends JFrame implements ActionListener {
 	    betCoinButton.setEnabled(true);
 	    pullHandleButton.setEnabled(false);
 	    resetButton.setEnabled(false);
-
+	    
 	    displayNums();
 	    displayStats();
 		
